@@ -24,14 +24,35 @@ def lemma_me(sentence):
     return sentence_lemmas
 
 
-# tokenize sentence
-sentence_tokens = nltk.sent_tokenize(text)
+# tokenize text
+sentence_tokens = nltk.sent_tokenize(text) # split into sentences
+sentence_tokens.append(question) # add the question 
 
-# calculate word frequency
+print(sentence_tokens)
+
+# calculate word importance 
 tv = TfidfVectorizer(tokenizer=lemma_me)
 tf = tv.fit_transform(sentence_tokens)
 print(tf)
 
 # rows for each sentence, columns = unique words
-df = pandas.DataFrame(tf, columns=tv.get_feature_names_out())
+df = pandas.DataFrame(tf.toarray(), columns=tv.get_feature_names_out())
 print(df)
+
+# find similarity between each sentence in text and the question
+values = cosine_similarity(tf[-1], tf)
+print(values)
+
+# argsort for indices that would sort the array 
+index = values.argsort()[0][-2]  # most similar at second last position (max is the question itself)
+print(index) # the index that corresponds in the original list of sentences
+
+
+values_flat = values.flatten()
+values_flat.sort() # ascending order of the list
+print(values_flat)
+
+coef = values_flat[-2] 
+if coef > 0.3:
+    print(sentence_tokens[index]) # -2 represents highest similarity which is at index 1 of original list 
+
