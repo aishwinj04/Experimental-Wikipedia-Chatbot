@@ -7,7 +7,7 @@ import pandas
 # initialize 
 lemmatizer = WordNetLemmatizer()
 text = 'Originally, vegetables were collected from the wild by hunter-gatheres. Vegetables are all plants. Vegetables can be eaten either cooked or raw.'
-question = 'What are vegetables?'
+question = 'Can you eat vegetables?'
 
 
 # lemmatize words in sentence
@@ -24,35 +24,41 @@ def lemma_me(sentence):
     return sentence_lemmas
 
 
-# tokenize text
-sentence_tokens = nltk.sent_tokenize(text) # split into sentences
-sentence_tokens.append(question) # add the question 
+def find_similar(sentence_lemmas):
+    # tokenize text
+    sentence_tokens = nltk.sent_tokenize(text) # split into sentences
+    sentence_tokens.append(question) # add the question 
 
-print(sentence_tokens)
+    print(sentence_tokens)
 
-# calculate word importance 
-tv = TfidfVectorizer(tokenizer=lemma_me)
-tf = tv.fit_transform(sentence_tokens)
-print(tf)
+    # calculate word importance 
+    tv = TfidfVectorizer(tokenizer=lemma_me)
+    tf = tv.fit_transform(sentence_tokens)
+    print(tf)
 
-# rows for each sentence, columns = unique words
-df = pandas.DataFrame(tf.toarray(), columns=tv.get_feature_names_out())
-print(df)
+    # rows for each sentence, columns = unique words
+    df = pandas.DataFrame(tf.toarray(), columns=tv.get_feature_names_out())
+    print(df)
 
-# find similarity between each sentence in text and the question
-values = cosine_similarity(tf[-1], tf)
-print(values)
+    # find similarity between each sentence in text and the question
+    values = cosine_similarity(tf[-1], tf)
+    print(values)
 
-# argsort for indices that would sort the array 
-index = values.argsort()[0][-2]  # most similar at second last position (max is the question itself)
-print(index) # the index that corresponds in the original list of sentences
+    # argsort for indices that would sort the array 
+    index = values.argsort()[0][-2]  # most similar at second last position (max is the question itself)
+    print(index) # the index that corresponds in the original list of sentences
 
 
-values_flat = values.flatten()
-values_flat.sort() # ascending order of the list
-print(values_flat)
+    values_flat = values.flatten()
+    values_flat.sort() # ascending order of the list
+    print(values_flat)
 
-coef = values_flat[-2] 
-if coef > 0.3:
-    print(sentence_tokens[index]) # -2 represents highest similarity which is at index 1 of original list 
-
+    coef = values_flat[-2] 
+    if coef > 0.3:
+        print(sentence_tokens[index]) # -2 represents highest similarity which is at index 1 of original list 
+        return sentence_tokens[index]
+    
+   
+lst = lemma_me(text)
+result = find_similar(lst)
+print(result)
