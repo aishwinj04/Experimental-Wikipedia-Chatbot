@@ -11,7 +11,8 @@ This system leverages several libraries:
 - **Pandas** for handling and displaying text data.
 
 ### Example
-``` Hello User, Please enter topic you want to learn more about: Batman
+```
+Hello User, Please enter topic you want to learn more about: Batman
 What do u want to know about Batman? 
 In what city does batman reside in? 
 He resides on the outskirts of Gotham City in his personal residence, Wayne Manor.
