@@ -3,12 +3,13 @@ from nltk import WordNetLemmatizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import pandas
+import warnings
+
+warnings.filterwarnings("ignore", message=".*token_pattern.*")
+
 
 # initialize 
 lemmatizer = WordNetLemmatizer()
-text = 'Originally, vegetables were collected from the wild by hunter-gatheres. Vegetables are all plants. Vegetables can be eaten either cooked or raw.'
-question = 'Can you eat vegetables?'
-
 
 # lemmatize words in sentence
 def lemma_me(sentence):
@@ -24,41 +25,44 @@ def lemma_me(sentence):
     return sentence_lemmas
 
 
-def find_similar(sentence_lemmas):
+# tokenize text and find similarity 
+def find_similar(text, question):
     # tokenize text
     sentence_tokens = nltk.sent_tokenize(text) # split into sentences
     sentence_tokens.append(question) # add the question 
 
-    print(sentence_tokens)
-
     # calculate word importance 
     tv = TfidfVectorizer(tokenizer=lemma_me)
     tf = tv.fit_transform(sentence_tokens)
-    print(tf)
 
     # rows for each sentence, columns = unique words
     df = pandas.DataFrame(tf.toarray(), columns=tv.get_feature_names_out())
-    print(df)
 
     # find similarity between each sentence in text and the question
     values = cosine_similarity(tf[-1], tf)
-    print(values)
 
     # argsort for indices that would sort the array 
-    index = values.argsort()[0][-2]  # most similar at second last position (max is the question itself)
-    print(index) # the index that corresponds in the original list of sentences
+    # most similar at second last position (max is the question itself)
+    index = values.argsort()[0][-2]  
 
 
     values_flat = values.flatten()
-    values_flat.sort() # ascending order of the list
-    print(values_flat)
+    values_flat.sort() 
 
     coef = values_flat[-2] 
     if coef > 0.3:
-        print(sentence_tokens[index]) # -2 represents highest similarity which is at index 1 of original list 
+       # print(sentence_tokens[index])  -2 represents highest similarity which is at index 1 of original list 
         return sentence_tokens[index]
     
-   
-lst = lemma_me(text)
-result = find_similar(lst)
-print(result)
+
+def main():
+    text = 'Originally, vegetables were collected from the wild by hunter-gatheres. Vegetables are all plants. Vegetables can be eaten either cooked or raw.'
+    while True:
+        question = input("Hi, What do u want to know? ")
+        output = find_similar(text, question)
+        print(output)
+        
+
+
+if __name__ == '__main__':
+    main()
