@@ -10,6 +10,19 @@ This system leverages several libraries:
 - **Wikipedia API** to fetch Wikipedia page content.
 - **Pandas** for handling and displaying text data.
 
+### Example
+``` Hello User, Please enter topic you want to learn more about: Batman
+What do u want to know about Batman? 
+In what city does batman reside in? 
+He resides on the outskirts of Gotham City in his personal residence, Wayne Manor.
+What do u want to know about Batman? 
+What is the alias of Batman?
+In the DC Universe, Batman is the alias of Bruce Wayne, a wealthy American playboy, philanthropist, and industrialist who resides in Gotham City.
+What do u want to know about Batman? 
+q
+Exiting Program
+```
+
 ### Features
 
 1. **Topic Selection**: The user is prompted to input a topic (such as "Python programming"), and the program fetches the Wikipedia page content for that topic.
