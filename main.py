@@ -32,6 +32,7 @@ def find_similar(text, question):
     sentence_tokens = nltk.sent_tokenize(text) # split into sentences
     sentence_tokens.append(question) # add the question 
 
+
     # calculate word importance 
     tv = TfidfVectorizer(tokenizer=lemma_me)
     tf = tv.fit_transform(sentence_tokens)
