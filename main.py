@@ -3,10 +3,11 @@ from nltk import WordNetLemmatizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import pandas
+import wikipedia
 import warnings
 
+# Ignore token pattern warning
 warnings.filterwarnings("ignore", message=".*token_pattern.*")
-
 
 # initialize 
 lemmatizer = WordNetLemmatizer()
@@ -56,12 +57,24 @@ def find_similar(text, question):
     
 
 def main():
-    text = 'Originally, vegetables were collected from the wild by hunter-gatheres. Vegetables are all plants. Vegetables can be eaten either cooked or raw.'
+    
+    # get page topic
+    topic = input('Hello User, Please enter topic you want to learn more about: ')
+    
     while True:
-        question = input("Hi, What do u want to know? ")
+        question = input(f'What do u want to know about {topic}?')
+    
+        if question.lower() == 'q': 
+            print('Exiting Program')
+            break
+
+        text = wikipedia.page(topic).content
         output = find_similar(text, question)
-        print(output)
-        
+
+        if output:
+            print(output)
+        else:
+            print('Sorry, I am unable to answer that. ')
 
 
 if __name__ == '__main__':
