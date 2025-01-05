@@ -32,6 +32,7 @@ def find_similar(text, question):
     sentence_tokens = nltk.sent_tokenize(text) # split into sentences
     sentence_tokens.append(question) # add the question 
 
+    # debug print(sentence_tokens) 
 
     # calculate word importance 
     tv = TfidfVectorizer(tokenizer=lemma_me)
@@ -43,6 +44,8 @@ def find_similar(text, question):
     # find similarity between each sentence in text and the question
     values = cosine_similarity(tf[-1], tf)
 
+   # debug print(values)
+
     # argsort for indices that would sort the array 
     # most similar at second last position (max is the question itself)
     index = values.argsort()[0][-2]  
@@ -52,7 +55,7 @@ def find_similar(text, question):
     values_flat.sort() 
 
     coef = values_flat[-2] 
-    if coef > 0.3:
+    if coef > 0.2:
        # print(sentence_tokens[index])  -2 represents highest similarity which is at index 1 of original list 
         return sentence_tokens[index]
     
